@@ -13,6 +13,7 @@ import logging
 import sys
 import random
 from neopixel import *
+import string
 # from pprint import pprint
 from slackclient import SlackClient
 
@@ -82,19 +83,19 @@ class StrangerBot(object):
             while True:
                 event = parse_slack_output(slack_client.rtm_read())
                 if event:
-                    recv_msg = event.get('text').lower().translate(None, string.punctuation)
+                    recv_msg = event.get('text').lower()
                 else:
                     recv_msg = ""
                 if event and recv_msg != "":
                     logging.info("event received from slack: %s",
                                  event.get('text'))
                     initLights(self.strip)
-                    time.sleep(random.randint(5,9))
+                    time.sleep(3)
                     for i in range(20):
                         flicker(self.strip,random.randint(LIGHTSHIFT,len(ALPHABET)+LIGHTSHIFT))
                         time.sleep(random.randint(10,50)/1000.0)
                     blinkWords(self.strip, recv_msg)
-                    runBlink(self.strip)
+                    #runBlink(self.strip)
                 time.sleep(self._READ_WEBSOCKET_DELAY)
         else:
             logging.error("Connection failed. Invalid Slack token or bot ID?")
