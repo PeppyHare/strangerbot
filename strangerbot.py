@@ -80,15 +80,16 @@ class StrangerBot(object):
             logging.info("StrangerBot connected and running!")
             while True:
                 event = parse_slack_output(slack_client.rtm_read())
-                if event:
+                recv_msg = event.get('text').lower().translate(None, string.punctuation)
+                if event and recv_msg != "":
                     logging.info("event received from slack: %s",
                                  event.get('text'))
                     initLights(self.strip)
-                    time.sleep(random.randint(5,15))
+                    time.sleep(random.randint(5,9))
                     for i in range(20):
                         flicker(self.strip,random.randint(LIGHTSHIFT,len(ALPHABET)+LIGHTSHIFT))
                         time.sleep(random.randint(10,50)/1000.0)
-                    blinkWords(self.strip, event.get('text'))
+                    blinkWords(self.strip, recv_msg)
                     runBlink(self.strip)
                 time.sleep(self._READ_WEBSOCKET_DELAY)
         else:
