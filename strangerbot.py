@@ -81,7 +81,10 @@ class StrangerBot(object):
             logging.info("StrangerBot connected and running!")
             while True:
                 event = parse_slack_output(slack_client.rtm_read())
-                recv_msg = event.get('text').lower().translate(None, string.punctuation)
+                if event:
+                    recv_msg = event.get('text').lower().translate(None, string.punctuation)
+                else:
+                    recv_msg = ""
                 if event and recv_msg != "":
                     logging.info("event received from slack: %s",
                                  event.get('text'))
